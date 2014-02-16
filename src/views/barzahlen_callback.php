@@ -59,7 +59,7 @@ class barzahlen_callback extends oxUBase {
       return;
     }
 
-    return;
+    return 'page/shop/start.tpl';
   }
 
   /**

@@ -54,11 +54,11 @@ class barzahlen_payment extends barzahlen_payment_parent {
    */
   public function getPartner() {
 
-    $partner = '<br/>';
+    $partner = '&nbsp;';
 
     for($i = 1; $i <= 10; $i++) {
       $count = str_pad($i,2,"0",STR_PAD_LEFT);
-      $partner .= '<img src="http://cdn.barzahlen.de/images/barzahlen_partner_'.$count.'.png" alt="" />';
+      $partner .= '<img src="http://cdn.barzahlen.de/images/barzahlen_partner_'.$count.'.png" alt="" style="vertical-align: middle; height: 25px;" />';
     }
 
     return $partner;

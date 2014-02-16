@@ -23,10 +23,7 @@
 
 class barzahlen_thankyou extends barzahlen_thankyou_parent {
 
-  protected $_paymentSlipLink;
-  protected $_expirationNotice;
   protected $_infotextOne;
-  protected $_infotextTwo;
   protected $_sThisTemplate = 'barzahlen_thankyou.tpl';
 
   /**
@@ -35,11 +32,7 @@ class barzahlen_thankyou extends barzahlen_thankyou_parent {
   public function init()
   {
     parent::init();
-
-    $this->_paymentSlipLink = oxSession::getVar('barzahlenPaymentSlipLink');
-    $this->_expirationNotice = oxSession::getVar('barzahlenExpirationNotice');
     $this->_infotextOne = oxSession::getVar('barzahlenInfotextOne');
-    $this->_infotextTwo = oxSession::getVar('barzahlenInfotextTwo');
   }
 
   /**
@@ -49,30 +42,8 @@ class barzahlen_thankyou extends barzahlen_thankyou_parent {
    */
   public function render() {
 
-    oxSession::deleteVar( 'barzahlenPaymentSlipLink' );
-    oxSession::deleteVar( 'barzahlenExpirationNotice' );
     oxSession::deleteVar( 'barzahlenInfotextOne' );
-    oxSession::deleteVar( 'barzahlenInfotextTwo' );
-
     return parent::render();
-  }
-
-  /**
-   * Returns the payment slip link.
-   *
-   * @return string with payment slip link
-   */
-  public function getPaymentSlipLink() {
-    return $this->_paymentSlipLink;
-  }
-
-  /**
-   * Returns the expiration notice.
-   *
-   * @return string with expiration notice
-   */
-  public function getExpirationNotice() {
-    return $this->_expirationNotice;
   }
 
   /**
@@ -82,14 +53,5 @@ class barzahlen_thankyou extends barzahlen_thankyou_parent {
    */
   public function getInfotextOne() {
     return $this->_infotextOne;
-  }
-
-  /**
-   * Returns the infotext 2.
-   *
-   * @return string with infotext 2
-   */
-  public function getInfotextTwo() {
-    return $this->_infotextTwo;
   }
 }

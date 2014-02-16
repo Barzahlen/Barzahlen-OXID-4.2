@@ -23,8 +23,8 @@
 
 require_once 'shop_config.php';
 
-class barzahlen_settings extends Shop_Config
-{
+class barzahlen_settings extends Shop_Config {
+
   protected $_sThisTemplate = 'barzahlen_settings.tpl';
 
   /**
@@ -45,6 +45,6 @@ class barzahlen_settings extends Shop_Config
     $oxConfig = $this->getConfig();
     $bzConfig = $oxConfig->getParameter('barzahlen_config');
     $oxConfig->saveShopConfVar('arr', 'barzahlen_config', $bzConfig);
-    $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BARZAHLEN__SETTINGS_SUCCESS");
+    $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BZ__SETTINGS_SUCCESS");
   }
 }

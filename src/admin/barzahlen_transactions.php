@@ -21,7 +21,7 @@
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
 
-require_once dirname(__FILE__) . '/../modules/barzahlen/api/loader.php';
+require_once getShopBasePath() . 'modules/barzahlen/api/loader.php';
 
 class Barzahlen_Transactions extends oxAdminView {
 
@@ -42,14 +42,14 @@ class Barzahlen_Transactions extends oxAdminView {
     $oOrder = $this->getEditObject();
     $this->_aViewData["payment"] = $oOrder->oxorder__oxpaymenttype->value;
     $this->_aViewData["transactionId"] = $oOrder->oxorder__bztransaction->value;
-    $this->_aViewData["state"] = 'BARZAHLEN__STATE_' . strtoupper($oOrder->oxorder__bzstate->value);
+    $this->_aViewData["state"] = 'BZ__STATE_' . strtoupper($oOrder->oxorder__bzstate->value);
     $this->_aViewData["currency"] = $oOrder->oxorder__oxcurrency->value;
 
     if($oOrder->oxorder__bzstate->value == 'paid') {
       if($oOrder->oxorder__bzrefunds->value != "") {
         $refundData = unserialize(str_replace("&quot;", "\"", $oOrder->oxorder__bzrefunds->value));
         foreach($refundData as $key => $refund) {
-          $refundData[$key]['state'] = 'BARZAHLEN__STATE_' . strtoupper($refund['state']);
+          $refundData[$key]['state'] = 'BZ__STATE_' . strtoupper($refund['state']);
         }
         $this->_aViewData["refunds"] = $refundData;
       }
@@ -124,10 +124,10 @@ class Barzahlen_Transactions extends oxAdminView {
     $resend = $this->_connectBarzahlenApi($request);
 
     if($resend->isValid()) {
-      $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BARZAHLEN__RESEND_".strtoupper($type)."_SUCCESS");
+      $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BZ__RESEND_".strtoupper($type)."_SUCCESS");
     }
     else {
-      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BARZAHLEN__RESEND_".strtoupper($type)."_ERROR");
+      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BZ__RESEND_".strtoupper($type)."_ERROR");
     }
   }
 
@@ -141,7 +141,7 @@ class Barzahlen_Transactions extends oxAdminView {
     $amount = round(filter_var(str_replace(",", ".", $_POST['refund_amount']), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),2);
 
     if($amount > $this->_getRefundable()) {
-      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BARZAHLEN__REFUND_TOO_HIGH");
+      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BZ__REFUND_TOO_HIGH");
       return;
     }
 
@@ -157,10 +157,10 @@ class Barzahlen_Transactions extends oxAdminView {
       $refundData[] = $newRefund;
       $oOrder->oxorder__bzrefunds = new oxField(serialize($refundData));
       $oOrder->save();
-      $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BARZAHLEN__REFUND_SUCCESS");
+      $this->_aViewData["info"] = array("class" => "messagebox", "message" => "BZ__REFUND_SUCCESS");
     }
     else {
-      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BARZAHLEN__REFUND_ERROR");
+      $this->_aViewData["info"] = array("class" => "errorbox", "message" => "BZ__REFUND_ERROR");
     }
   }
 

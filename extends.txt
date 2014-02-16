@@ -1,0 +1,3 @@
+payment => barzahlen/views/barzahlen_payment
+thankyou => barzahlen/views/barzahlen_thankyou
+oxpaymentgateway => barzahlen/core/barzahlen_payment_gateway

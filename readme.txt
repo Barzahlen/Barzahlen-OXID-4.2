@@ -8,7 +8,7 @@ Zerebro Internet GmbH
 bz
 
 ==Version==
-1.1.3
+1.1.4
 
 ==Link==
 http://www.barzahlen.de
@@ -31,6 +31,13 @@ Integrates Barzahlen payment solution into OXID eSales.
 *oxpaymentgateway
 --executePayment
 
+*oxorder
+--cancelOrder
+--delete
+
+*navigation
+--_doStartUpChecks
+
 ==Installation==
 * copy contents from copy_this directory into the shop root
 * use Service/Tools in admin area to upload install.sql
@@ -41,6 +48,8 @@ Integrates Barzahlen payment solution into OXID eSales.
 payment => barzahlen/views/barzahlen_payment
 thankyou => barzahlen/views/barzahlen_thankyou
 oxpaymentgateway => barzahlen/core/barzahlen_payment_gateway
+oxorder => barzahlen/core/barzahlen_order
+navigation => barzahlen/core/barzahlen_navigation
 
 ==Ressources==
 Full User Manual: http://www.barzahlen.de/partner/integration/shopsysteme/4/oxid-eshop

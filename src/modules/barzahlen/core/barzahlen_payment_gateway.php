@@ -23,87 +23,85 @@
 
 require_once getShopBasePath() . 'modules/barzahlen/api/loader.php';
 
-class barzahlen_payment_gateway extends barzahlen_payment_gateway_parent {
+class barzahlen_payment_gateway extends barzahlen_payment_gateway_parent
+{
+    const LOGFILE = "barzahlen.log";
 
-  protected $_sLastError = "barzahlen";
-  const LOGFILE = "barzahlen.log";
+    /**
+     * Executes payment, returns true on success.
+     *
+     * @param double $dAmount Goods amount
+     * @param object &$oOrder User ordering object
+     *
+     * @return bool
+     */
+    public function executePayment($dAmount, &$oOrder)
+    {
+        if ($oOrder->oxorder__oxpaymenttype->value != 'oxidbarzahlen') {
+            return parent::executePayment($dAmount, $oOrder);
+        }
 
-  /**
-   * Executes payment, returns true on success.
-   *
-   * @param double $dAmount Goods amount
-   * @param object &$oOrder User ordering object
-   *
-   * @return bool
-   */
-  public function executePayment($dAmount, &$oOrder) {
+        $this->_sLastError = "barzahlen";
+        $country = oxNew("oxcountry");
+        $country->load($oOrder->oxorder__oxbillcountryid->rawValue);
 
-    if ($oOrder->oxorder__oxpaymenttype->value != 'oxidbarzahlen') {
-      return parent::executePayment($dAmount, $oOrder);
+        $api = $this->_getBarzahlenApi($oOrder);
+
+        $customerEmail = $oOrder->oxorder__oxbillemail->rawValue;
+        $customerStreetNr = $oOrder->oxorder__oxbillstreet->rawValue . ' ' . $oOrder->oxorder__oxbillstreetnr->rawValue;
+        $customerZipcode = $oOrder->oxorder__oxbillzip->rawValue;
+        $customerCity = $oOrder->oxorder__oxbillcity->rawValue;
+        $customerCountry = $country->oxcountry__oxisoalpha2->rawValue;
+        $orderId = $oOrder->oxorder__oxordernr->value;
+        $amount = $oOrder->oxorder__oxtotalordersum->value;
+        $currency = $oOrder->oxorder__oxcurrency->rawValue;
+        $payment = new Barzahlen_Request_Payment($customerEmail, $customerStreetNr, $customerZipcode, $customerCity, $customerCountry, $amount, $currency, $orderId);
+
+        try {
+            $api->handleRequest($payment);
+        } catch (Exception $e) {
+            oxUtils::getInstance()->writeToLog(date('c') . " Transaction/Create failed: " . $e . "\r\r", self::LOGFILE);
+        }
+
+        if ($payment->isValid()) {
+            oxSession::setVar('barzahlenInfotextOne', (string) $payment->getInfotext1());
+            $oOrder->oxorder__bztransaction = new oxField((int) $payment->getTransactionId());
+            $oOrder->oxorder__bzstate = new oxField('pending');
+            $oOrder->save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    $country = oxNew("oxcountry");
-    $country->load($oOrder->oxorder__oxbillcountryid->rawValue);
+    /**
+     * Prepares a Barzahlen API object for the payment request.
+     *
+     * @param object $oOrder User ordering object
+     * @return Barzahlen_Api
+     */
+    protected function _getBarzahlenApi($oOrder)
+    {
+        $oxConfig = oxConfig::getInstance();
+        $bzConfig = $oxConfig->getShopConfVar('barzahlen_config');
 
-    $api = $this->_getBarzahlenApi($oOrder);
-
-    $customerEmail = $oOrder->oxorder__oxbillemail->rawValue;
-    $customerStreetNr = $oOrder->oxorder__oxbillstreet->rawValue .' '. $oOrder->oxorder__oxbillstreetnr->rawValue;
-    $customerZipcode = $oOrder->oxorder__oxbillzip->rawValue;
-    $customerCity = $oOrder->oxorder__oxbillcity->rawValue;
-    $customerCountry = $country->oxcountry__oxisoalpha2->rawValue;
-    $orderId = $oOrder->oxorder__oxordernr->value;
-    $amount = $oOrder->oxorder__oxtotalordersum->value;
-    $currency = $oOrder->oxorder__oxcurrency->rawValue;
-    $payment = new Barzahlen_Request_Payment($customerEmail, $customerStreetNr, $customerZipcode, $customerCity, $customerCountry, $amount, $currency, $orderId);
-
-    try {
-      $api->handleRequest($payment);
-    }
-    catch (Exception $e) {
-      oxUtils::getInstance()->writeToLog(date('c') . " Transaction/Create failed: " . $e . "\r\r", self::LOGFILE);
+        $api = new Barzahlen_Api($bzConfig['shop_id'], $bzConfig['payment_key'], $bzConfig['sandbox']);
+        $api->setDebug($bzConfig['debug'], self::LOGFILE);
+        $api->setLanguage($this->_getOrderLanguage($oOrder));
+        return $api;
     }
 
-    if($payment->isValid()) {
-      oxSession::setVar('barzahlenInfotextOne', (string)$payment->getInfotext1());
-      $oOrder->oxorder__bztransaction = new oxField((int)$payment->getTransactionId());
-      $oOrder->oxorder__bzstate = new oxField('pending');
-      $oOrder->save();
-      return true;
+    /**
+     * Gets the order language code.
+     *
+     * @param object $oOrder User ordering object
+     * @return string
+     */
+    protected function _getOrderLanguage($oOrder)
+    {
+        $oxConfig = oxConfig::getInstance();
+        $lgConfig = $oxConfig->getShopConfVar('aLanguageParams');
+
+        return array_search($oOrder->getOrderLanguage(), $lgConfig);
     }
-    else {
-      return false;
-    }
-  }
-
-  /**
-   * Prepares a Barzahlen API object for the payment request.
-   *
-   * @param object $oOrder User ordering object
-   * @return Barzahlen_Api
-   */
-  protected function _getBarzahlenApi($oOrder) {
-
-    $oxConfig = oxConfig::getInstance();
-    $bzConfig = $oxConfig->getShopConfVar('barzahlen_config');
-
-    $api = new Barzahlen_Api($bzConfig['shop_id'], $bzConfig['payment_key'], $bzConfig['sandbox']);
-    $api->setDebug($bzConfig['debug'], self::LOGFILE);
-    $api->setLanguage($this->_getOrderLanguage($oOrder));
-    return $api;
-  }
-
-  /**
-   * Gets the order language code.
-   *
-   * @param object $oOrder User ordering object
-   * @return string
-   */
-  protected function _getOrderLanguage($oOrder) {
-
-    $oxConfig = oxConfig::getInstance();
-    $lgConfig = $oxConfig->getShopConfVar('aLanguageParams');
-
-    return array_search($oOrder->getOrderLanguage(), $lgConfig);
-  }
 }

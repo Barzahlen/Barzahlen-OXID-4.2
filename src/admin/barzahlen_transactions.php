@@ -90,7 +90,7 @@ class Barzahlen_Transactions extends oxAdminView {
         $refundable -= $refund['state'] != 'expired' ? $refund['amount'] : 0;
       }
     }
-    return $refundable;
+    return round($refundable, 2);
   }
 
   /**

@@ -24,7 +24,7 @@
 class barzahlen_thankyou extends barzahlen_thankyou_parent {
 
   protected $_infotextOne;
-  protected $_sThisTemplate = 'barzahlen_thankyou.tpl';
+  protected $_sThisTemplate = 'thankyou.tpl';
 
   /**
    * Grabs the payment information from the session.

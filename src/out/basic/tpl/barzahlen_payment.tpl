@@ -42,9 +42,9 @@
   [{assign var="iPayError" value=$oView->getPaymentError() }]
   [{* BARZAHLEN BEGIN *}]
   [{if $smarty.get.payerrortext == 'barzahlen'}]
-    <div class="status error">[{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_ERROR" }]</div>
-  [{ elseif $iPayError == 1}]
+    <div class="errorbox">[{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_ERROR" }]</div>
   [{* BARZAHLEN END *}]
+  [{ elseif $iPayError == 1}]
     <br><div class="errorbox">[{ oxmultilang ident="PAYMENT_COMLETEALLFIELDS" }]</div>
   [{ elseif $iPayError == 2}]
     <br><div class="errorbox">[{ oxmultilang ident="PAYMENT_AUTHORIZATIONFAILED" }]</div>
@@ -81,27 +81,7 @@
                 [{ assign var="inptcounter" value="-1"}]
                 [{foreach key=sPaymentID from=$oView->getPaymentList() item=paymentmethod name=PaymentSelect}]
                   [{ assign var="inptcounter" value="`$inptcounter+1`"}]
-                  [{* BARZAHLEN BEGIN *}]
-                  [{if $sPaymentID == "oxidbarzahlen"}]
-                    <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
-                      <td><input id="test_Payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]></td>
-                      <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2"><label><b><img src="http://cdn.barzahlen.de/images/barzahlen_logo.png" height="45" alt="[{ $paymentmethod->oxpayments__oxdesc->value}]" style="vertical-align:middle;"></b></label></td>
-                    </tr>
-                    <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
-                      <td></td>
-                      <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2">
-                        [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_DESC" }]
-                        [{if $oView->getSandbox() == 1}]
-                        [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_SANDBOX" }]
-                        [{/if}]
-                        [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER" }]&nbsp;
-                        [{section name=partner start=1 loop=11}]
-                        <img src="http://cdn.barzahlen.de/images/barzahlen_partner_[{"%02d"|sprintf:$smarty.section.partner.index}].png" alt="" style="vertical-align: middle;" height="25px" />
-                        [{/section}]
-                      </td>
-                    </tr>
-                   [{* BARZAHLEN END *}]
-                  [{elseif $sPaymentID == "oxidcashondel"}]
+                  [{if $sPaymentID == "oxidcashondel"}]
                     <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
                       <td><input id="test_Payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]></td>
                       <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2"><label><b>[{ $paymentmethod->oxpayments__oxdesc->value}]</b></label></td>
@@ -208,6 +188,28 @@
                       <td><label>[{ oxmultilang ident="PAYMENT_ACCOUNTHOLDER2" }]</label></td>
                       <td><input type="text" size="20" maxlength="64" name="dynvalue[lsktoinhaber]" value="[{ if $dynvalue.lsktoinhaber }][{ $dynvalue.lsktoinhaber }][{else}][{$oxcmp_user->oxuser__oxfname->value}] [{$oxcmp_user->oxuser__oxlname->value}][{/if}]"></td>
                     </tr>
+                 [{* BARZAHLEN BEGIN *}]
+                 [{elseif $sPaymentID == "oxidbarzahlen"}]
+                   [{if $oView->checkCurrency() == true}]
+                     <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
+                       <td><input id="test_Payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]></td>
+                       <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2"><label><b><img src="https://cdn.barzahlen.de/images/barzahlen_logo.png" height="45" alt="[{ $paymentmethod->oxpayments__oxdesc->value}]" style="vertical-align:middle;"></b></label></td>
+                     </tr>
+                     <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
+                       <td></td>
+                       <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2">
+                         [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_DESC" }]
+                         [{if $oView->getSandbox() == 1}]
+                         [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_SANDBOX" }]
+                         [{/if}]
+                         [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER" }]&nbsp;
+                         [{section name=partner start=1 loop=11}]
+                         <img src="https://cdn.barzahlen.de/images/barzahlen_partner_[{"%02d"|sprintf:$smarty.section.partner.index}].png" alt="" style="vertical-align: middle;" height="25px" />
+                         [{/section}]
+                       </td>
+                     </tr>
+                   [{/if}]
+                 [{* BARZAHLEN END *}]
                   [{else}]
                     <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
                       <td><input id="test_Payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]></td>
@@ -223,12 +225,10 @@
                       </tr>
                     [{/foreach}]
                   [{/if}]
-                  [{if $sPaymentID != "oxidbarzahlen"}]
                   <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
                     <td></td>
                     <td id="test_PaymentLongDesc_[{$sPaymentID}]" colspan="2">[{ $paymentmethod->oxpayments__oxlongdesc->value}]</td>
                   </tr>
-                  [{/if}]
                     [{if $inptcounter > -1 && $inptcounter < ($paymencnt-1) }]
                     <tr class="tr_sep">
                       <td colspan="3"><div class="dot_sep"></div></td>
@@ -237,7 +237,7 @@
                 [{/foreach}]
                 </table>
 
-                </div>
+            </div>
 
                 [{if $oView->isLowOrderPrice()}]
                   <div class="bar prevnext order">

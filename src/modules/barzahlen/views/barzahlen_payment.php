@@ -23,7 +23,8 @@
 
 class barzahlen_payment extends barzahlen_payment_parent {
 
-  protected $_sThisTemplate = 'barzahlen_payment.tpl';
+  protected $_sThisTemplate = 'payment.tpl';
+  private $_supportedCurrencies = array('EUR');
 
   /**
    * Executes parent method parent::render().
@@ -45,5 +46,17 @@ class barzahlen_payment extends barzahlen_payment_parent {
     $oxConfig = oxConfig::getInstance();
     $bzConfig = $oxConfig->getShopConfVar('barzahlen_config');
     return $bzConfig['sandbox'];
+  }
+
+  /**
+   * Checks if current shop currency is support by Barzahlen.
+   *
+   * @return boolean
+   */
+  public function checkCurrency() {
+
+    $oxConfig = $this->getConfig();
+    $oCurrency = $oxConfig->getActShopCurrencyObject();
+    return in_array($oCurrency->name, $this->_supportedCurrencies);
   }
 }

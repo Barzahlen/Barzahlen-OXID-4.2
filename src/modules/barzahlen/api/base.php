@@ -53,7 +53,7 @@ abstract class Barzahlen_Base {
   protected function _debug($message, $data = array()) {
 
     if($this->_debug == true) {
-      oxRegistry::getUtils()->writeToLog(date('c') . " - " . $message . " - " . serialize($data) . "\n", $this->_logFile);
+      oxUtils::getInstance()->writeToLog(date('c') . " - " . $message . " - " . serialize($data) . "\n", $this->_logFile);
     }
   }
 

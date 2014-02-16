@@ -8,7 +8,7 @@ Zerebro Internet GmbH
 bz
 
 ==Version==
-1.1.1
+1.1.2
 
 ==Link==
 http://www.barzahlen.de

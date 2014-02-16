@@ -94,8 +94,10 @@
                         [{if $oView->getSandbox() == 1}]
                         [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_SANDBOX" }]
                         [{/if}]
-                        [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER" }]
-                        [{$oView->getPartner()}]
+                        [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER" }]&nbsp;
+                        [{section name=partner start=1 loop=11}]
+                        <img src="http://cdn.barzahlen.de/images/barzahlen_partner_[{"%02d"|sprintf:$smarty.section.partner.index}].png" alt="" style="vertical-align: middle;" height="25px" />
+                        [{/section}]
                       </td>
                     </tr>
                    [{* BARZAHLEN END *}]

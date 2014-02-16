@@ -29,4 +29,3 @@ $aLang = array(
   'BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER' => '<strong>Bezahlen Sie bei:</strong>',
   'BZ__PAGE_CHECKOUT_PAYMENT_ERROR' => 'Es gab einen Fehler bei der Daten&uuml;bertragung. Bitte versuchen Sie es erneut oder w&auml;hlen Sie eine andere Zahlungsmethode.'
 );
-?>

@@ -32,7 +32,7 @@
           <tr>
             <td class="listheader first" width="30%">[{oxmultilang ident="BZ__TRANSACTION_ID"}]</td>
             <td class="listheader" width="30%">[{oxmultilang ident="BZ__STATE"}]</td>
-            <td class="listheader" width="40%"></td>
+            <td class="listheader" width="40%">&nbsp;</td>
           </tr>
           <tr>
             <td>[{ $transactionId }]</td>
@@ -59,7 +59,7 @@
       <td class="listheader first" width="30%">[{oxmultilang ident="BZ__REFUND_TRANSACTION_ID"}]</td>
       <td class="listheader" width="15%">[{oxmultilang ident="BZ__AMOUNT"}]</td>
       <td class="listheader" width="15%">[{oxmultilang ident="BZ__STATE"}]</td>
-      <td class="listheader" width="40%"></td>
+      <td class="listheader" width="40%">&nbsp;</td>
     </tr>
     [{foreach from=$refunds item=refund}]
     <tr>
@@ -83,7 +83,7 @@
     [{/foreach}]
   </table>
 [{/if}]
-[{if round($refundable) > 0}]
+[{if round($refundable,2) > 0}]
 <br><br>
   <table cellspacing="0" cellpadding="0" border="0"  style="width: 600px; text-align: center;">
     <tr>

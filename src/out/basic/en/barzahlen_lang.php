@@ -29,4 +29,3 @@ $aLang = array(
   'BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER' => '<strong>Pay at:</strong>',
   'BZ__PAGE_CHECKOUT_PAYMENT_ERROR' => 'Payment via Barzahlen was unfortunately not possible. Please try again or select another payment method.'
 );
-?>

@@ -39,6 +39,8 @@ class barzahlen_callback extends oxUBase {
 
   public function render() {
 
+    parent::render();
+
     $this->_checkGetData();
 
     if($this->_notification->isValid()) {
@@ -222,4 +224,3 @@ class barzahlen_callback extends oxUBase {
     }
   }
 }
-?>

@@ -193,22 +193,20 @@
                    [{if $oView->checkCurrency() == true}]
                      <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
                        <td><input id="test_Payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]></td>
-                       <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2"><label><b><img src="https://cdn.barzahlen.de/images/barzahlen_logo.png" height="45" alt="[{ $paymentmethod->oxpayments__oxdesc->value}]" style="vertical-align:middle;"></b></label></td>
+                       <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2"><label><b><img id="barzahlen_logo" src="https://cdn.barzahlen.de/images/barzahlen_logo.png" height="45" alt="[{ $paymentmethod->oxpayments__oxdesc->value}]" style="vertical-align:middle;"></b></label></td>
                      </tr>
                      <tr onclick="oxid.form.select('paymentid',[{$inptcounter}]);">
                        <td></td>
                        <td id="test_PaymentDesc_[{$smarty.foreach.PaymentSelect.iteration}]" colspan="2">
-                         <div style="padding-top: 1em;">
-                           <img src="https://cdn.barzahlen.de/images/barzahlen_special.png" style="float: right; margin-left: 10px; max-width: 180px; max-height: 180px;">
+                         <div id="barzahlen_description" style="padding-top: 1em;">
+                           <img id="barzahlen_special" src="https://cdn.barzahlen.de/images/barzahlen_special.png" style="float: right; margin-left: 10px; max-width: 180px; max-height: 180px;">
                            [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_DESC" }]
-                           [{if $oView->getSandbox() == 1}]
-                           [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_SANDBOX" }]
-                           [{/if}]
-                           [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_OUR_PARTNER" }]&nbsp;
+                           [{ oxmultilang ident="BZ__PAGE_CHECKOUT_PAYMENT_PAY_AT" }]&nbsp;
                            [{section name=partner start=1 loop=11}]
                            <img src="https://cdn.barzahlen.de/images/barzahlen_partner_[{"%02d"|sprintf:$smarty.section.partner.index}].png" alt="" style="vertical-align: middle;" height="25px" />
                            [{/section}]
                          </div>
+                         <script src="https://cdn.barzahlen.de/js/selection.js"></script>
                        </td>
                      </tr>
                    [{/if}]
